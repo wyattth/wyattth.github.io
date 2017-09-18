@@ -2,7 +2,7 @@ pImpl Lite
 ==========
 
 When you know that your class will be used as heap objects, it is often simpler
-to use an explicit smart pointer ```sid::unique_ptr<Widget>``` rather than a
+to use an explicit smart pointer ```std::unique_ptr<Widget>``` rather than a
 fully wrapped value-type piple. Compare:
 
 ```c++
@@ -22,6 +22,9 @@ class Gadget_pImpl {
     }
 };
 ```
+
+This approach allows the type of memory management (i.e. ```std::unique_ptr<Widget>``` 
+vs ```std::shared_ptr<Widget>``` vs ```std::weak_ptr<Widget>```).
 
 Define a header file ```Widget.h```...
 

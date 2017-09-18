@@ -23,11 +23,18 @@ public:
 };
 ```
 
-This approach allows the client to choose the ownership (i.e. lifespan) of the ```Widget```
+This approach allows the client (rather than the ```Widget``` object itself to control the ownership 
+(i.e. lifespan) of the ```Widget```
 (i.e. ```std::unique_ptr<Widget>``` vs ```std::shared_ptr<Widget>``` vs ```std::weak_ptr<Widget>```).
 With a pImpl class, the ownership hidden (and fixed) inside the private definition.
 The result, every pImpl class needs a significant amount of boiler-plate code:
-* ...
+ * a constructor that manually constructs the implementation
+ * a default move constructor in class definition and implementation
+ * a default move assignment in class definition and implementation
+ * a default copy constructor (if appropriate) in class definition and implementationx
+ * a default copy assignment (if appropriate) in class definition and implementation
+ * a default destructor in class definition and implementation
+ * a manual forwarding of every method from the pImpl object to its implementation
 
 Define a header file ```Widget.h```...
 

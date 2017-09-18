@@ -24,8 +24,10 @@ public:
 ```
 
 This approach allows the client to choose the ownership (i.e. lifespan) of the ```Widget```
-(i.e. ```std::unique_ptr<Widget>``` vs ```std::shared_ptr<Widget>``` vs ```std::weak_ptr<Widget>```)
-rather than have the ownership hidden (and fixed) inside the private definition.
+(i.e. ```std::unique_ptr<Widget>``` vs ```std::shared_ptr<Widget>``` vs ```std::weak_ptr<Widget>```).
+With a pImpl class, the ownership hidden (and fixed) inside the private definition.
+The result, every pImpl class needs a significant amount of boiler-plate code:
+* ...
 
 Define a header file ```Widget.h```...
 

@@ -8,7 +8,7 @@ fully wrapped value-type piple. Compare:
 ```c++
 class Gadget_simple {
     std::unique_ptr<SimpleWidget>  widget_;
-    
+public:  
     void foo() {
         widget_->doSomething();
     }
@@ -16,15 +16,16 @@ class Gadget_simple {
 
 class Gadget_pImpl {
     PimplWidget  widget_;
-    
+public:    
     void foo() {
         widget_.doSomething();
     }
 };
 ```
 
-This approach allows the type of memory management (i.e. ```std::unique_ptr<Widget>``` 
-vs ```std::shared_ptr<Widget>``` vs ```std::weak_ptr<Widget>```).
+This approach allows the client to choose the ownership (i.e. lifespan) of the ```Widget```
+(i.e. ```std::unique_ptr<Widget>``` vs ```std::shared_ptr<Widget>``` vs ```std::weak_ptr<Widget>```)
+rather than have the ownership hidden (and fixed) inside the private definition.
 
 Define a header file ```Widget.h```...
 

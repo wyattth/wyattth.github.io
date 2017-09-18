@@ -7,7 +7,7 @@ fully wrapped value-type piple. Compare:
 
 ```c++
 class Gadget_simple {
-    std::unique_ptr<SimpleWidget> widget_;
+    std::unique_ptr<SimpleWidget>  widget_;
     
     void foo() {
         widget_->doSomething();
@@ -15,7 +15,7 @@ class Gadget_simple {
 };
 
 class Gadget_pImpl {
-    PimplWidget widget_;
+    PimplWidget  widget_;
     
     void foo() {
         widget_.doSomething();
@@ -34,12 +34,12 @@ Define a header file ```Widget.h```...
 
 #include <memory>  // for unique_ptr<>
 
-namespace io { namespace Core {
+namespace io { namespace Core {  // define class in suitable namsepace
     class Widget;
 } }
 
-class io::Core::Widget {
-    class Implementation;  // defined in Widget.cpp
+class io::Core::Widget {   
+    class Implementation;  // private implementation defined in Widget.cpp
 public:
     static std::unique_ptr<Widget> make(int a);  // factory
     virtual ~Widget() {}  // allow destruction via reference to Widget
@@ -60,7 +60,7 @@ using io::Core::Widget;
 using namespace std;
 
 struct Widget::Implementation : Widget {
-    int id;
+    int  id;
     Implementation(int a);
     void zip(int) override;
 };

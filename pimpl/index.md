@@ -4,13 +4,20 @@ tagline: Easy websites with GitHub Pages
 description: Minimal tutorial on making a simple website with GitHub Pages
 ---
 
+The **pImpl** idiom is about creating a light-weight **value** type that hides its size and content
+details in a privately and exclusively-owned heap object. In C++11, this uses as ```std::unique_ptr<T>``` 
+as described in Scott Meyer's "Effective Modern C++". Methods are externally-linked non-virtual functions.
+
+An simpler alternative offering greater transparency, a simpler implementation and more control by the client
+is to provide a **factory** method returning ```unique_ptr```'s to a derived implementation of the public class.
+
 When you know that your class will be used as heap objects, it is often simpler
 to use an explicit smart pointer ```std::unique_ptr<Widget>``` rather than a
 fully wrapped value-type piple. Compare:
 
 ```c++
 class Gadget_simple {
-    std::unique_ptr<SimpleWidget>  widget_;
+    std::unique_ptr<SimpleWidget>  widget_ = SimpleWidget::make(44);
 public:  
     void foo() {
         widget_->doSomething();
@@ -18,7 +25,7 @@ public:
 };
 
 class Gadget_pImpl {
-    PimplWidget  widget_;
+    PimplWidget  widget_ { 44 };
 public:    
     void foo() {
         widget_.doSomething();
@@ -94,8 +101,11 @@ So now we can use the ```Widget``` as follows
 ```c++
 #include "Widget.h"
 
+using io::Core::Widget;
+using namespace std;
+
 void foo() {
-    std::unique_ptr<io::Core::Widget> w = io::Core::Widget::make(42);
+    unique_ptr<Widget> w = Widget::make(42);
     w->zip(100);
 }
 ```

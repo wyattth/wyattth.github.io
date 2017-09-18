@@ -4,7 +4,7 @@ tagline: Easy websites with GitHub Pages
 description: Minimal tutorial on making a simple website with GitHub Pages
 ---
 
-The **pImpl** idiom is about creating a light-weight **value** type that hides its size and content
+The **pImpl** idiom creates light-weight **value** types that hide their size and content
 details in a privately and exclusively-owned heap object. In C++11, this uses as ```std::unique_ptr<T>``` 
 as described in Scott Meyer's "Effective Modern C++". Methods are externally-linked non-virtual functions.
 
@@ -33,9 +33,8 @@ public:
 };
 ```
 
-This approach allows the client (rather than the ```Widget``` object itself to control the ownership 
-(i.e. lifespan) of the ```Widget```
-(i.e. ```std::unique_ptr<Widget>``` vs ```std::shared_ptr<Widget>``` vs ```std::weak_ptr<Widget>```).
+This approach allows the client (rather than the ```Widget``` object itself) to control the ownership/lifespan of the ```Widget```
+(choosing ```std::unique_ptr<Widget>```, ```std::shared_ptr<Widget>``` or ```std::weak_ptr<Widget>```).
 With a pImpl class, the ownership hidden (and fixed) inside the private definition.
 The result, every pImpl class needs a significant amount of boiler-plate code:
  * a constructor that manually constructs the implementation

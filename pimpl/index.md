@@ -1,6 +1,8 @@
 ---
-title: pImpl Lite
-tags: [meyers, c++, c++11, pimpl, idioms]
+layout: page
+title: simple site
+tagline: Easy websites with GitHub Pages
+description: Minimal tutorial on making a simple website with GitHub Pages
 ---
 
 When you know that your class will be used as heap objects, it is often simpler

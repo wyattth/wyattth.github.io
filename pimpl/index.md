@@ -16,7 +16,7 @@ class io::Core::Widget {
 public:
     static std::unique_ptr<Widget> make(int a);  // factory
     virtual ~Widget() {}  // allow destruction via reference to Widget
-    // public API
+// public API
     virtual void zip(int) = 0;
 };
 

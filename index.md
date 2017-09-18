@@ -1,6 +1,3 @@
-Hello
-```c++
-int main() {
-
-}
-```
+Ideas
+=====
+* [pimpl](pimpl)

@@ -1,6 +1,3 @@
-pImpl Lite
-==========
-
 When you know that your class will be used as heap objects, it is often simpler
 to use an explicit smart pointer ```std::unique_ptr<Widget>``` rather than a
 fully wrapped value-type piple. Compare:

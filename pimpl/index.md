@@ -1,6 +1,5 @@
 ---
 title: pImpl Lite
-layout: post
 tags: [meyers, c++, c++11, pimpl, idioms]
 ---
 

@@ -1,0 +1,154 @@
+<html>
+    <head>        
+        <style>
+
+body { margin:0; }
+body > svg { width:100%; height:100%; }
+circle { fill:red; }
+#processes > g { cursor:move }
+
+        </style>
+        <script>window.addEventListener('load', ()=>{
+
+const $owner = Symbol()
+let dragged = null
+
+class PosXY {
+    constructor(x,y) { [this.x, this.y] = [x,y] }
+    minus(p) { return Pos(this.x - p.x, this.y - p.y) }
+    plus(p) { return Pos(this.x + p.x, this.y + p.y) }
+}
+function Pos(x,y) { return new PosXY(x,y) }
+function LocalPos(evt, obj) {
+    const pnt = obj.ownerSVGElement.createSVGPoint()
+    if (evt.touches) {
+        pnt.x = evt.touches[0].clientX
+        pnt.y = evt.touches[0].clientY
+    } else {
+        pnt.x = evt.clientX
+        pnt.y = evt.clientY
+    }
+    const p = pnt.matrixTransform(obj.parentNode.getScreenCTM().inverse());
+    return Pos(p.x, p.y)
+}
+
+class EventListener {
+    constructor(object) {
+        this.svgElement = object
+        object[$owner] = this
+        for (const eventName of ['mousedown', 'click', 'dblclick', 'mousemove', 'mouseup', 'contextmenu', 'wheel',
+                                 'gesturestart', 'gesturechange', 'gestureend', 'touchstart', 'touchmove', 'touchend'])
+            if (this[eventName])
+                object.addEventListener(eventName, function (evt) { this[$owner][evt.type](evt) }, {passive:false})
+    }
+}
+
+window.addEventListener('wheel',()=>{}) // Allows Safari SVG to get event even if ouside BBox
+
+const processes = document.getElementById('processes')
+class Graph extends EventListener {
+    dblclick(evt) { new Process(LocalPos(evt, processes)) }
+    mousedown(evt) { if (!dragged) dragged = pan; this.mouseOffset = LocalPos(evt, dragged.svgElement).minus(dragged.pos) }
+    mousemove(evt) { if (dragged) dragged.pos = LocalPos(evt, dragged.svgElement).minus(this.mouseOffset) }
+    mouseup(evt) { dragged = null}
+    touchstart(evt) {
+        console.log(evt)
+        this.mousedown(evt) }
+    touchmove(evt) {
+        evt.preventDefault()
+        this.mousemove(evt) }
+    touchend(evt) {this.mouseup(evt) }
+    contextmenu(evt) { evt.preventDefault() }
+    wheel(evt) {
+        this.zoom(evt, -evt.deltaY)
+        clearTimeout(this.roundOffPositionsTimeout);
+        this.roundOffPositionsTimeout = setTimeout(this.roundOffPositions, 1000);
+        evt.preventDefault() // Stop browser from zooming us in
+    }
+    gesturestart(evt) { 
+        evt.preventDefault() // Stop browser from zooming us in
+        this.lastScale = 1
+    }
+    gesturechange(evt) { 
+        evt.preventDefault() // Stop browser from zooming us in
+        this.zoom(evt, 100*Math.log(evt.scale/this.lastScale))
+        this.lastScale = evt.scale
+    }
+    gestureend(evt) {
+        this.roundOffPositions();
+    }
+    zoom(evt,delta) {
+        for (const process of processes.children) {
+            const pos = process[$owner].pos
+            const d = pos.minus(LocalPos(evt, process))
+            const dis = delta / Math.sqrt(d.x*d.x + d.y*d.y)
+            process[$owner].pos = pos.plus(Pos(dis*d.x, dis*d.y))
+        }
+    }
+    roundOffPositions() {
+        for (const process of processes.children) {
+            const pos = process[$owner].pos
+            process[$owner].pos = Pos(Math.round(pos.x), Math.round(pos.y))
+        }
+    }
+}
+
+new Graph(document.getElementById('graph'))
+
+class Group extends EventListener {
+    set pos(pos) {
+        this.svgElement.setAttribute('transform',`translate(${pos.x},${pos.y})`)        
+    }
+    get pos() {
+        const transform = this.svgElement.transform.baseVal.consolidate()
+        return transform ? Pos(transform.matrix.e, transform.matrix.f) : Pos(0,0)
+    }
+}
+
+class DynamicGroup extends Group {
+    constructor(container,pos,g) {
+        super(g)
+        if (pos) this.pos=pos
+        container.append(g)
+    }
+    die() {
+        this.svgElement.remove()
+    }
+}
+
+class Pan extends Group {
+    constructor() {
+        super(document.getElementById('pan'))
+    }
+}
+pan = new Pan()
+
+class Process extends DynamicGroup {
+    constructor(pos) {
+        super(document.getElementById('processes'), pos, makeSVG('g'))
+        const circle = makeSVG('circle')
+        circle.setAttribute('r',40)
+        this.svgElement.append(circle)
+        this.pos = pos
+    }
+    mousedown(evt) { dragged = this }
+    touchstart(evt) { dragged = this }
+    dblclick(evt) { 
+        evt.stopPropagation()
+        this.die();        
+    }
+}
+
+function makeSVG(name) { return document.createElementNS('http://www.w3.org/2000/svg', name) }
+
+        })</script>
+    </head>
+    <body>
+        <svg id="graph">
+            <g id="pan">
+                <g id="links"/>
+                <g id="processes"/>
+            </g>
+        </svg>
+    </body>
+</html>

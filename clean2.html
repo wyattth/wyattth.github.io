@@ -21,9 +21,14 @@ class PosXY {
 function Pos(x,y) { return new PosXY(x,y) }
 function LocalPos(evt, obj) {
     const pnt = obj.ownerSVGElement.createSVGPoint()
-    if (evt.touches) {
-        pnt.x = evt.touches[0].clientX
-        pnt.y = evt.touches[0].clientY
+    if (evt.touches && !evt.clientX) {
+        for (t of evt.touches) {
+            console.log(t)
+            pnt.x += t.clientX
+            pnt.y += t.clientY
+        }
+        pnt.x /= evt.touches.length
+        pnt.y /= evt.touches.length
     } else {
         pnt.x = evt.clientX
         pnt.y = evt.clientY
@@ -52,12 +57,16 @@ class Graph extends EventListener {
     mousemove(evt) { if (dragged) dragged.pos = LocalPos(evt, dragged.svgElement).minus(this.mouseOffset) }
     mouseup(evt) { dragged = null}
     touchstart(evt) {
-        console.log(evt)
-        this.mousedown(evt) }
+        //if (evt.touches.length > 1) preventDefault()
+        this.mousedown(evt) 
+        }
     touchmove(evt) {
         evt.preventDefault()
-        this.mousemove(evt) }
-    touchend(evt) {this.mouseup(evt) }
+        this.mousemove(evt) 
+        }
+    touchend(evt) {
+        this.mouseup(evt) 
+        }
     contextmenu(evt) { evt.preventDefault() }
     wheel(evt) {
         this.zoom(evt, -evt.deltaY)

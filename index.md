@@ -1,3 +1,3 @@
 Ideas
 =====
-* [pimpl](pimpl)
+* [pimpl](pimpl2)

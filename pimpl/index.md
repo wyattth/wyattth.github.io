@@ -62,7 +62,7 @@ class io::Core::Widget {
 public:
     static std::unique_ptr<Widget> make(int a);  // factory
     virtual ~Widget() {}  // allow destruction via reference to Widget
-// public API
+
     virtual void zip(int) = 0;
 };
 
@@ -80,18 +80,30 @@ using namespace std;
 
 struct Widget::Implementation : Widget {
     int  id;
-    Implementation(int a);
-    void zip(int) override;
+    AbstractWidget(int a) : id(a) { }
 };
 
-void Widget::Implementation::zip(int n) {
-    cout << "Widget#" << id << " zips " << n << endl;
-}
+struct Widget::Implementation::SmallWidget : Widget::Implementation {
+    using Implementation::Implementation;
 
-Widget::Implementation::Implementation(int a) : id(a) { }
+    void zip(int) override {
+        cout << "Small Widget#" << id << " zips " << n << endl;
+    }
+};
+
+struct Widget::Implementation::BigWidget : Widget::Implementation {
+    using Implementation::Implementation;
+
+    void zip(int) override {
+        cout << "Big Widget#" << id << " zips " << n << endl;
+    }
+};
 
 unique_ptr<Widget> Widget::make(int a) {
-    return unique_ptr<Widget> { new Implementation(a) };
+    if (a<10) 
+        return unique_ptr<Widget> { new SmallWidget(a) };
+    else
+        return unique_ptr<Widget> { new BigWidget(a) };
 };
 ```
 

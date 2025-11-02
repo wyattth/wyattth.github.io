@@ -1,7 +1,7 @@
 ---
-title: simple site
+title: pImpl
 tagline: Easy websites with GitHub Pages
-description: Minimal tutorial on making a simple website with GitHub Pages
+description: Looking at the pImpl idiom
 ---
 
 The **pImpl** idiom creates light-weight **value** types that hide their size and content

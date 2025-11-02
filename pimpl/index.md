@@ -86,7 +86,7 @@ struct Widget::Implementation : Widget {
 struct Widget::Implementation::SmallWidget : Widget::Implementation {
     using Implementation::Implementation;
 
-    void zip(int) override {
+    void zip(int n) override {
         cout << "Small Widget#" << id << " zips " << n << endl;
     }
 };
@@ -94,7 +94,7 @@ struct Widget::Implementation::SmallWidget : Widget::Implementation {
 struct Widget::Implementation::BigWidget : Widget::Implementation {
     using Implementation::Implementation;
 
-    void zip(int) override {
+    void zip(int n) override {
         cout << "Big Widget#" << id << " zips " << n << endl;
     }
 };
